@@ -9,6 +9,16 @@ class Field {
     constructor(field) {
         this.field = field;
     }
+
+    print() {
+        for (let i = 0; i < this.field.length; i++) {
+            this.field[i][this.field.length - 1] += "\n";
+        }
+
+        const merged = this.field.flat(1);
+        
+        console.log(merged.join(''));
+    }
 }
 
 const myField = new Field([
@@ -17,4 +27,4 @@ const myField = new Field([
     [fieldCharacter, hat, fieldCharacter]
 ]);
 
-console.log(myField);
+myField.print();
