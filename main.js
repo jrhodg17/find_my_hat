@@ -27,39 +27,20 @@ const myField = new Field([
     [fieldCharacter, hat, fieldCharacter]
 ]);
 
-// Task 4
-// create while loop that runs while the game is running - use a global var
-// print the game board
-// prompt user for direction - if the input is invalid, let user know and prompt again
-// if user moves without ending the game, change moved to tile to the user icon
-// when game ends, tell user and change var to end the while loop
-
-
-
 const playGame = field => {
     // Create placeholder to end while loop
     let x = 0;
-    
     // Identify how long each row is
     const boardLength = field.field[0].length;
-    
     // Track current user location
     let userLocation = field.field[0][0];
 
     while (x < 1) {
-
-        // **Not sure if I need this...
-        // // Set value of u, d, r, and l
-        // let u;
-        // let d;
-        // let r;
-        // let l;
-        
         // Display game board
         field.print();
         
         // Get input from user and ensure input is valid
-        const userInput = prompt("Which way? u, d, r, or l... ");
+        let userInput = prompt("Which way? u, d, r, or l... ");
         
         if (userInput !== 'd' && userInput !== 'u' && userInput !== 'r' && userInput !== 'l') {
             console.log('Must enter either u, d, r, or l. Try again.');
@@ -90,9 +71,40 @@ const playGame = field => {
         } else if (currentIndex % boardLength === 0 && userInput === 'l') {
             console.log('You went off the board! GAME OVER.')
             x++;
-        // Check if the user is going left and off the board
+        }
+        
+        // Transform user input into a number
+        let convertedInput = 0;
+
+        if (userInput === 'u') {
+            convertedInput = (boardLength * -1);
+        } else if (userInput === 'r') {
+            convertedInput = 1;
+        } else if (userInput === 'd') {
+            convertedInput = (boardLength);
+        } else if (userInput === 'l') {
+            convertedInput = -1;
         }
 
+       // Determine where the next move would be to
+       let nextSpot = field.field[currentIndex + convertedInput];
+       
+        // Check if the user fell into a hole
+        if (nextSpot === 'O') {
+            console.log('You fell into a hole! GAME OVER.')
+            x++;
+        }
+
+        // Check if user reached found the hat
+        if (nextSpot === '^') {
+            console.log('You found the hat! YOU WIN.');
+            x++;
+        }
+
+        ////////
+
+        // If game isn't ended by user's move, mark their move on the board
+        nextSpot = '*';
     }
 }
 
