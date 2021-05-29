@@ -12,12 +12,8 @@ class Field {
 
     print() {
         for (let i = 0; i < this.field.length; i++) {
-            this.field[i][this.field.length - 1] += "\n";
+            console.log(this.field[i].join(''));
         }
-
-        const merged = this.field.flat(1);
-        
-        console.log(merged.join(''));
     }
 }
 
@@ -84,13 +80,18 @@ const playGame = field => {
         } else {
             userLocation += convertedInput;
             flatField[userLocation] = '*';
-        }
 
-        // DEBUGGING
-        console.log(flatField);
-        console.log('User location: ', userLocation);
-        console.log('Current index: ', userLocation);
-        console.log('Converted input: ', convertedInput);
+            // Change the board
+            let placeholderList = [];
+            let placeholderSliceValTwo = boardLength;
+
+            for (let i = 0; i < boardLength * field.field.length; i += boardLength) {
+                placeholderList.push(flatField.slice(i, placeholderSliceValTwo));
+                placeholderSliceValTwo += boardLength;
+            }
+
+            field.field = placeholderList;
+        }
     }
 }
 
