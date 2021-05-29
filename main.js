@@ -28,17 +28,20 @@ const myField = new Field([
 ]);
 
 const playGame = field => {
-    // Create placeholder to end while loop
-    let x = 0;
     // Identify how long each row is
     const boardLength = field.field[0].length;
-    // Track current user location
+
+    // Flatten the nested arrays into one
     let flatField = field.field.flat(1);
+
+    // Save array of range of number of elements in board
+    const wholeBoardAsRange = [...Array(flatField.length).keys()];
+
+    // Track current user location
     let userLocation = 0;
 
-    // DEBUGGING
-    console.log(flatField);
-    console.log('User location: ', userLocation);
+    // Create placeholder to end while loop
+    let x = 0;
 
     while (x < 1) {
         // Display game board
@@ -64,28 +67,6 @@ const playGame = field => {
         } else if (userInput === 'l') {
             convertedInput = -1;
         }
-        
-        //// Determine whether the latest move ends the game ////
-
-        // Determine total length of board
-        const wholeBoardAsRange = [...Array(flatField.length).keys()];
-
-        // // Check if  user is going up and off the board
-        // if (userLocation < boardLength && userInput === 'u') {
-        //     console.log('You went off the board! GAME OVER.')
-        //     x++;
-        // // Check if user if going right and off the board    
-        // } else if (userLocation % (boardLength - 1) === 0 && userInput === 'r') {
-        //     console.log('You went off the board! GAME OVER.')
-        //     x++;
-        // // Check if the user is going down and off the board
-        // } else if (userLocation + boardLength > wholeBoard && userInput === 'd') {
-        //     console.log('You went off the board! GAME OVER.')
-        //     x++;
-        // // Check if the user is going left and off the board
-        // } else if (userLocation % boardLength === 0 && userInput === 'l') {
-        //     console.log('You went off the board! GAME OVER.')
-        //     x++;
 
         // Check if user went off the board 
         if (!(wholeBoardAsRange.includes(userLocation + convertedInput))) {
@@ -110,7 +91,6 @@ const playGame = field => {
         console.log('User location: ', userLocation);
         console.log('Current index: ', userLocation);
         console.log('Converted input: ', convertedInput);
-
     }
 }
 
