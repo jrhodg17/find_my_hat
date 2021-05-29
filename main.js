@@ -34,12 +34,11 @@ const playGame = field => {
     const boardLength = field.field[0].length;
     // Track current user location
     let flatField = field.field.flat(1);
-    let userLocation = flatField[0];
+    let userLocation = 0;
 
     // DEBUGGING
     console.log(flatField);
     console.log('User location: ', userLocation);
-    console.log('Idex of user location: ', flatField.indexOf(userLocation));
 
     while (x < 1) {
         // Display game board
@@ -52,40 +51,7 @@ const playGame = field => {
             console.log('Must enter either u, d, r, or l. Try again.');
             const userInput = prompt("Which way? u, d, r, or l... ");
         }
-        
-        //// Determine whether the latest move ends the game ////
 
-        // Determine total length of board
-        const wholeBoard = flatField.length;
-
-        // Current index of userLocation
-        let currentIndex = 0;
-
-        if (flatField.indexOf(userLocation) !== 0) {
-            currentIndex = flatField.indexOf(userLocation, userLocation - 1);
-        } 
-
-        // DEBUGGING
-        // console.log('Current index: ', currentIndex);
-        
-        // Check if  user is going up and off the board
-        if (currentIndex < boardLength && userInput === 'u') {
-            console.log('You went off the board! GAME OVER.')
-            x++;
-        // Check if user if going right and off the board    
-        } else if (currentIndex % (boardLength - 1) === 0 && userInput === 'r') {
-            console.log('You went off the board! GAME OVER.')
-            x++;
-        // Check if the user is going down and off the board
-        } else if (currentIndex + boardLength > wholeBoard && userInput === 'd') {
-            console.log('You went off the board! GAME OVER.')
-            x++;
-        // Check if the user is going left and off the board
-        } else if (currentIndex % boardLength === 0 && userInput === 'l') {
-            console.log('You went off the board! GAME OVER.')
-            x++;
-        }
-        
         // Transform user input into a number
         let convertedInput = 0;
 
@@ -98,36 +64,51 @@ const playGame = field => {
         } else if (userInput === 'l') {
             convertedInput = -1;
         }
+        
+        //// Determine whether the latest move ends the game ////
 
-       // Determine where the next move would be to
-       let nextSpot = flatField[currentIndex + convertedInput];
-       
-       // DEBUGGING
-       console.log('Index of nextSpot: ', currentIndex + convertedInput);
-       
+        // Determine total length of board
+        const wholeBoardAsRange = [...Array(flatField.length).keys()];
+
+        // // Check if  user is going up and off the board
+        // if (userLocation < boardLength && userInput === 'u') {
+        //     console.log('You went off the board! GAME OVER.')
+        //     x++;
+        // // Check if user if going right and off the board    
+        // } else if (userLocation % (boardLength - 1) === 0 && userInput === 'r') {
+        //     console.log('You went off the board! GAME OVER.')
+        //     x++;
+        // // Check if the user is going down and off the board
+        // } else if (userLocation + boardLength > wholeBoard && userInput === 'd') {
+        //     console.log('You went off the board! GAME OVER.')
+        //     x++;
+        // // Check if the user is going left and off the board
+        // } else if (userLocation % boardLength === 0 && userInput === 'l') {
+        //     console.log('You went off the board! GAME OVER.')
+        //     x++;
+
+        // Check if user went off the board 
+        if (!(wholeBoardAsRange.includes(userLocation + convertedInput))) {
+            console.log('You went off the board! GAME OVER.')
+            x++;
         // Check if the user fell into a hole
-        if (nextSpot === 'O') {
+        } else if (flatField[userLocation + convertedInput] === 'O') {
             console.log('You fell into a hole! GAME OVER.')
             x++;
-        }
-
         // Check if user reached found the hat
-        if (nextSpot === '^') {
+        } else if (flatField[userLocation + convertedInput] === '^') {
             console.log('You found the hat! YOU WIN.');
             x++;
-        }
-
-        ////////
-
         // If game isn't ended by user's move, mark their move on the board
-        userLocation = nextSpot;
-        flatField[currentIndex + convertedInput] = '*';
+        } else {
+            userLocation += convertedInput;
+            flatField[userLocation] = '*';
+        }
 
         // DEBUGGING
         console.log(flatField);
         console.log('User location: ', userLocation);
-        console.log('Idex of user location: ', flatField.indexOf(userLocation));
-        console.log('Current index: ', currentIndex);
+        console.log('Current index: ', userLocation);
         console.log('Converted input: ', convertedInput);
 
     }
