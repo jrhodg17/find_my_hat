@@ -3,7 +3,7 @@ const prompt = require('prompt-sync')({sigint: true});
 const hat = '^';
 const hole = 'O';
 const fieldCharacter = '░';
-const pathCharacter = '*';
+const pathCharacter = '*'; 
 
 class Field {
     constructor(field) {
@@ -33,7 +33,13 @@ const playGame = field => {
     // Identify how long each row is
     const boardLength = field.field[0].length;
     // Track current user location
-    let userLocation = field.field[0][0];
+    let flatField = field.field.flat(1);
+    let userLocation = flatField[0];
+
+    // DEBUGGING
+    console.log(flatField);
+    console.log('User location: ', userLocation);
+    console.log('Idex of user location: ', flatField.indexOf(userLocation));
 
     while (x < 1) {
         // Display game board
@@ -49,11 +55,18 @@ const playGame = field => {
         
         //// Determine whether the latest move ends the game ////
 
-        // Flatten nested arrays into one array & determine total length
-        field.field.flat(1);
-        const wholeBoard = field.field.length;
+        // Determine total length of board
+        const wholeBoard = flatField.length;
+
         // Current index of userLocation
-        let currentIndex = field.field.indexOf(userLocation, userLocation - 1);
+        let currentIndex = 0;
+
+        if (flatField.indexOf(userLocation) !== 0) {
+            currentIndex = flatField.indexOf(userLocation, userLocation - 1);
+        } 
+
+        // DEBUGGING
+        // console.log('Current index: ', currentIndex);
         
         // Check if  user is going up and off the board
         if (currentIndex < boardLength && userInput === 'u') {
@@ -81,13 +94,16 @@ const playGame = field => {
         } else if (userInput === 'r') {
             convertedInput = 1;
         } else if (userInput === 'd') {
-            convertedInput = (boardLength);
+            convertedInput = boardLength;
         } else if (userInput === 'l') {
             convertedInput = -1;
         }
 
        // Determine where the next move would be to
-       let nextSpot = field.field[currentIndex + convertedInput];
+       let nextSpot = flatField[currentIndex + convertedInput];
+       
+       // DEBUGGING
+       console.log('Index of nextSpot: ', currentIndex + convertedInput);
        
         // Check if the user fell into a hole
         if (nextSpot === 'O') {
@@ -104,7 +120,16 @@ const playGame = field => {
         ////////
 
         // If game isn't ended by user's move, mark their move on the board
-        nextSpot = '*';
+        userLocation = nextSpot;
+        flatField[currentIndex + convertedInput] = '*';
+
+        // DEBUGGING
+        console.log(flatField);
+        console.log('User location: ', userLocation);
+        console.log('Idex of user location: ', flatField.indexOf(userLocation));
+        console.log('Current index: ', currentIndex);
+        console.log('Converted input: ', convertedInput);
+
     }
 }
 
